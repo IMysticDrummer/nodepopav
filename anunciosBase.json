@@ -1,0 +1,39 @@
+{
+  "advertisements": [
+    {
+      "nombre": "Bicicleta",
+      "venta": true,
+      "precio": 230.15,
+      "foto": "bici.jpeg",
+      "tags": [ "lifestyle", "motor"]
+    },
+    {
+      "nombre": "iPhone 3GS",
+      "venta": false,
+      "precio": 50.00,
+      "foto": "iphone.jpeg",
+      "tags": [ "lifestyle", "mobile"]
+    },
+    {
+      "nombre": "Bolso",
+      "venta": true,
+      "precio": 34.99,
+      "foto": "bolso.jpg",
+      "tags": [ "lifestyle"]
+    },
+    {
+      "nombre": "Mochila para portátil",
+      "venta": false,
+      "precio": 45,
+      "foto": "mochila_portatil.jpeg",
+      "tags": [ "lifestyle", "work"]
+    },
+    {
+      "nombre": "Coche Renault Laguna",
+      "venta": true,
+      "precio": 15000,
+      "foto": "coche_renault_laguna.jpg",
+      "tags": [ "motor"]
+    }
+  ]
+}

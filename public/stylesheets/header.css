@@ -1,0 +1,66 @@
+header {
+  position: sticky;
+  top:0;
+  padding: 20px 0px 20px 0px;
+  background-color: whitesmoke;
+
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.titlePage {
+  order: 2;
+  font-family: var(--font-titlePage);
+  font-size: 2.5em;
+  font-weight: 700;
+  width: 80%;
+  padding: 1%;
+  justify-content: right;
+
+}
+
+.imgLogo{
+  order: 1;
+  border: 1px black solid;
+  
+  width: 10%;
+  padding: 1%;
+}
+
+aside{
+  order:3;
+  padding: 1%;
+  width: 100%;
+}
+
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+nav>section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: right;
+}
+h4 {
+  width: 100%;
+}
+
+.filters{
+  width: 100%;
+}
+.filters > li, .pagination > li{
+  display: inline-block;
+  justify-content: space-between;
+}
+
+label {
+  width: 100%;
+  text-align: right;
+}
+
+input[type=number] {
+  width: 4em;
+}

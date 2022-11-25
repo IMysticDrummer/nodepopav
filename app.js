@@ -35,13 +35,24 @@ app.use('/favicon.ico', (req, res, next) => {
   res.send();
 });
 
-app.use(i18n.init);
-
 /* API request */
 app.use('/api', apiRouter);
+/* Web configuration */
+app.use(i18n.init);
+
+let title = 'Nodepop - ';
+title += i18n.__('The Web for purchase-sale second-hand articles');
 
 /* Web request */
-app.use('/', indexRouter);
+app.use(
+  '/',
+  (req, res, next) => {
+    req.title = title;
+    next();
+  },
+  indexRouter
+);
+app.use('/change-lang', require('./routes/change-lang'));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

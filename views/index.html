@@ -19,27 +19,27 @@
 </head>
 <body>
   
-  <%- include('./header.ejs')  %> 
+  <%- include('./header.html')  %> 
 
   <main>
     <section>
       <% ads.forEach(element => { %>
         <article>
           <% if (element.nombre) {%>
-            <h2 class="articleTitle">Artículo: <%= element.nombre  %> </h2>
+            <h2 class="articleTitle"><%=__('Article')%>: <%= element.nombre  %> </h2>
           <%}%>
           <% if (element.foto) {%>
             <img class="articleImg" src="/images/anuncios/<%= element.foto%>" alt="<%= element.foto%>"></picture>
           <%}%>
-          <% if (element.venta) {%>
+
             <% if (element.venta===true) { %>
-              <h4 class="sale">EN VENTA</h4>
+              <h4 class="sale"><%=__('SELLING')%></h4>
             <% } else { %>
-              <h4 class="sale">BÚSCO</h4>
+              <h4 class="sale"><%=__('SEARCHING')%></h4>
             <%}%>
-          <%}%>
+
           <% if (element.tags) {%>
-            <p class="tags">TAGS</p>
+            <p class="tags"><%=__('TAGS')%></p>
             <p>
               <% element.tags.forEach(tag => {%>
                 <span><%=tag%> ; </span>
@@ -47,11 +47,11 @@
             </p>
           <%}%>
           <% if (element.precio) {%>
-            <h3 class="price">PRECIO</h3>
+            <h3 class="price"><%=__('PRICE')%></h3>
             <p class="priceElement"><%= element.precio %></p>
           <%}%>
           <% if (element._id) {%>
-            <p class="infos">Otras Infos</p>
+            <p class="infos"><%=__('Other info')%></p>
             <p>id:<%= element._id %> ; __v: <%= element.__v %></p>
           <%}%>
         </article>
@@ -61,7 +61,7 @@
   </main>
 
   <footer>
-    <p>copyrigth y redes sociales</p>
+    <p><%=__('copyrigth and social networks')%></p>
   </footer>
   
 </body>

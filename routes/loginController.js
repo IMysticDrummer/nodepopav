@@ -32,13 +32,15 @@ class LoginController {
         res.render('login');
         return;
       }
-      console.log(usuario.id);
+      //Si existe y coincide
+      //apunto en la sesión que es un usuario logado
+      req.session.userLogged = usuario.id;
+
+      //--> llevar a zona privada
+      res.redirect('/');
     } catch (error) {
       next(error);
     }
-
-    //Si existe y coincide --> llevar a zona privada
-    res.redirect('/');
   }
 }
 

@@ -3,6 +3,9 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const sesion = require('express-session');
+
+const sessionAuth = require('./lib/sessionAuthMiddleware');
 const i18n = require('./lib/i18nConfiguration');
 
 //Routes
@@ -56,10 +59,24 @@ const titleMiddleware = (req, res, next) => {
 
 const loginController = new LoginController();
 
+//Inicio de sesión
+app.use(
+  sesion({
+    name: 'nodepop-session',
+    secret: "Y3Jz.5J7gz#P'G", //con strong password
+    saveUninitialized: true,
+    resave: false,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 2,
+    },
+  })
+);
+
 app.use('/', titleMiddleware, indexRouter);
 app.use('/change-lang', require('./routes/change-lang'));
 app.get('/login', titleMiddleware, loginController.index);
 app.post('/login', titleMiddleware, loginController.post);
+app.use('/prueba', sessionAuth, titleMiddleware, indexRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

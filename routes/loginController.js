@@ -3,15 +3,10 @@ const { Usuario } = require('../models');
 
 class LoginController {
   index(req, res, next) {
-    /*    let data = {};
-    data.title = req.title;
-    data.page = 'login';
-    data.error = '';
-    res.render('login', data);
-*/
     res.locals.title = req.title;
     res.locals.page = 'login';
     res.locals.error = '';
+    res.locals.email = '';
     res.render('login');
   }
 
@@ -27,6 +22,7 @@ class LoginController {
       // Si no lo encuentro o no coincide la contraseña --> error
       if (!usuario) {
         res.locals.error = res.__('Invalid credentials');
+        res.locals.email = email;
         res.locals.title = req.title;
         res.locals.page = 'login';
         res.render('login');

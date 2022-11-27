@@ -17,6 +17,8 @@ router.get('/', Advertisement.dataValidator('get'), async (req, res, next) => {
   let data = Advertisement.assingSearchData(req);
   //Adding title
   data.title = req.title;
+  //Adding page indicator
+  data.page='index';
 
   //Search and render
   try {

@@ -1,0 +1,27 @@
+<form id="formFilterPagination" name="formFilterPagination" action="/" method="get">
+  <nav>
+    <section>
+      <h4><%= __('Filters to apply in URL for') %>: </h4>
+      <ul class="filters">
+        <li><%=__('tag')%></li>
+        <li><%=__('sell')%></li>
+        <li><%=__('price')%></li>
+        <li><%=__('name')%></li>
+        <li></li>
+        <li><%=__('Applicable ordering with "sort", and champs selection with "fields"')%></li>
+        <li><%=__('Applicable pagination with "skip" and "limit"')%></li>
+      </ul>
+    </section>
+    <section>
+
+      <label for="artPerPage"><h4>
+        <% if (limit && limit<ads.length) {%>
+          <%= limit %> <%=__('Elements in this page, of')%> <%=ads.length%>
+        <%} else {%>
+          <%= ads.length %> <%=__('Elements in this page')%>
+        <%}%>
+      </h4></label>
+
+    </section>
+  </nav>
+</form>

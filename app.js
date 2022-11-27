@@ -8,6 +8,7 @@ const i18n = require('./lib/i18nConfiguration');
 //Routes
 var indexRouter = require('./routes/index');
 var apiRouter = require('./routes/api/ads');
+const LoginController = require('./routes/loginController');
 
 var app = express();
 
@@ -43,16 +44,18 @@ app.use(i18n.init);
 let title = 'Nodepop - ';
 title += i18n.__('The Web for purchase-sale second-hand articles');
 
+const titleMiddleware = (req, res, next) => {
+  req.title = title;
+  next();
+};
+
 /* Web request */
-app.use(
-  '/',
-  (req, res, next) => {
-    req.title = title;
-    next();
-  },
-  indexRouter
-);
+
+const loginController = new LoginController();
+
+app.use('/', titleMiddleware, indexRouter);
 app.use('/change-lang', require('./routes/change-lang'));
+app.get('/login', titleMiddleware, loginController.index);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

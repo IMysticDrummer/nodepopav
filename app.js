@@ -60,6 +60,7 @@ const titleMiddleware = (req, res, next) => {
 const loginController = new LoginController();
 
 //Inicio de sesión
+//TODO implementar el almacén de sesión
 app.use(
   sesion({
     name: 'nodepop-session',

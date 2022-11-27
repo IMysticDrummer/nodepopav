@@ -20,7 +20,7 @@ class LoginController {
       const usuario = await Usuario.findOne({ email });
 
       // Si no lo encuentro o no coincide la contraseña --> error
-      if (!usuario) {
+      if (!usuario || password != usuario.password) {
         res.locals.error = res.__('Invalid credentials');
         res.locals.email = email;
         res.locals.title = req.title;
@@ -34,6 +34,7 @@ class LoginController {
     }
 
     //Si existe y coincide --> llevar a zona privada
+    res.redirect('/');
   }
 }
 

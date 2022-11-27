@@ -56,6 +56,7 @@ const loginController = new LoginController();
 app.use('/', titleMiddleware, indexRouter);
 app.use('/change-lang', require('./routes/change-lang'));
 app.get('/login', titleMiddleware, loginController.index);
+app.post('/login', titleMiddleware, loginController.post);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

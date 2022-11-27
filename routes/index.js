@@ -1,7 +1,7 @@
 var express = require('express');
 const { validationResult } = require('express-validator');
 var router = express.Router();
-const { Advertisement } = require('../models/Anuncios');
+const { Advertisement } = require('../models');
 
 //Routes GET home page
 router.get('/', Advertisement.dataValidator('get'), async (req, res, next) => {
@@ -18,7 +18,7 @@ router.get('/', Advertisement.dataValidator('get'), async (req, res, next) => {
   //Adding title
   data.title = req.title;
   //Adding page indicator
-  data.page='index';
+  data.page = 'index';
 
   //Search and render
   try {

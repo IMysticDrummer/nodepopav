@@ -72,11 +72,18 @@ app.use(
   })
 );
 
+//Sesión visible por todas las vistas
+app.use((req, res, next) => {
+  res.locals.session = req.session;
+  next();
+});
+
 app.use('/', titleMiddleware, indexRouter);
 app.use('/change-lang', require('./routes/change-lang'));
 app.get('/login', titleMiddleware, loginController.index);
 app.post('/login', titleMiddleware, loginController.post);
 app.use('/prueba', sessionAuth, titleMiddleware, indexRouter);
+app.get('/logout', loginController.logout);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

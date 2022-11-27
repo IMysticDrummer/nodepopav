@@ -13,15 +13,9 @@ class LoginController {
   async post(req, res, next) {
     const { email, password } = req.body;
 
-    console.log(email, password);
-
     //Buscar en BDD
     try {
       const usuario = await Usuario.findOne({ email });
-      console.log('Usuario: ', usuario);
-      console.log('Postpassword: ', password);
-      console.log('hashPostPassword: ', await Usuario.hashPassword(password));
-      console.log('usuario pass: ', usuario.password);
 
       // Si no lo encuentro o no coincide la contraseña --> error
       if (!usuario || !(await usuario.comparePassword(password))) {
@@ -41,6 +35,16 @@ class LoginController {
     } catch (error) {
       next(error);
     }
+  }
+
+  logout(req, res, next) {
+    req.session.regenerate((err) => {
+      if (err) {
+        next(err);
+        return;
+      }
+      res.redirect('/');
+    });
   }
 }
 

@@ -66,7 +66,6 @@ function loadUsersFromFile() {
           password: password,
         };
         users = users.concat([newUser]);
-        console.log(users);
       });
     });
 

@@ -6,6 +6,7 @@ var logger = require('morgan');
 const sesion = require('express-session');
 
 const sessionAuth = require('./lib/sessionAuthMiddleware');
+const jwtAuthMiddelware = require('./lib/jwtAuthMiddleware');
 const i18n = require('./lib/i18nConfiguration');
 
 //Routes
@@ -39,8 +40,12 @@ app.use('/favicon.ico', (req, res, next) => {
   res.send();
 });
 
+const loginController = new LoginController();
+
 /* API request */
-app.use('/api', apiRouter);
+app.use('/api', jwtAuthMiddelware, apiRouter);
+app.use('/api/login', loginController.postJWT);
+
 /* Web configuration */
 app.use(i18n.init);
 
@@ -56,8 +61,6 @@ const titleMiddleware = (req, res, next) => {
 };
 
 /* Web request */
-
-const loginController = new LoginController();
 
 //Inicio de sesión
 //TODO implementar el almacén de sesión

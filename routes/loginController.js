@@ -1,5 +1,6 @@
 'use strict';
 const { Usuario } = require('../models');
+const jwt = require('jsonwebtoken');
 
 class LoginController {
   index(req, res, next) {
@@ -45,6 +46,33 @@ class LoginController {
       }
       res.redirect('/');
     });
+  }
+
+  async postJWT(req, res, next) {
+    const { email, password } = req.body;
+
+    //Buscar en BDD
+    try {
+      const usuario = await Usuario.findOne({ email });
+
+      // Si no lo encuentro o no coincide la contraseña --> error
+      if (!usuario || !(await usuario.comparePassword(password))) {
+        //TODO res.status=401;
+        res.json({ error: 'Invalid credentials' });
+        return;
+      }
+      //Si existe y coincide
+
+      //Generar un token JWT con su _id
+      const token = jwt.sign({ _id: usuario.id }, process.env.JWT_SECRET, {
+        expiresIn: '2d',
+      });
+
+      //--> llevar a zona privada
+      res.json({ token });
+    } catch (error) {
+      next(error);
+    }
   }
 }
 

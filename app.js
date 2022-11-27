@@ -41,11 +41,14 @@ app.use('/api', apiRouter);
 /* Web configuration */
 app.use(i18n.init);
 
-let title = 'Nodepop - ';
-title += i18n.__('The Web for purchase-sale second-hand articles');
-
 const titleMiddleware = (req, res, next) => {
-  req.title = title;
+  req.title = 'Nodepop';
+  req.title +=
+    ' - ' +
+    i18n.__({
+      phrase: 'The Web for purchase-sale second-hand articles',
+      locale: req.cookies['nodepop-locale'],
+    });
   next();
 };
 

@@ -1,10 +1,11 @@
 <%- include('./header.html') %>
 
-<form name="loginForm" id="loginForm" method="post" target="_self">
+<form method="post">
 
   <input type="email" name="email" id="email" placeholder='<%= __("We'll never give your email to anyone else") %> ' required />
   <input type="password" name="password" id="password" required />
   <button type="submit"> <%= __('Submit') %> </button>
+  <div><%= error %></div>
 </form>
 
 </body>

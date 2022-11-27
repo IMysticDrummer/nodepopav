@@ -2,6 +2,7 @@ var express = require('express');
 const { validationResult } = require('express-validator');
 var router = express.Router();
 const { Advertisement } = require('../models');
+const i18n = require('../lib/i18nConfiguration');
 
 //Routes GET home page
 router.get('/', Advertisement.dataValidator('get'), async (req, res, next) => {

@@ -18,9 +18,13 @@ class LoginController {
     //Buscar en BDD
     try {
       const usuario = await Usuario.findOne({ email });
+      console.log('Usuario: ', usuario);
+      console.log('Postpassword: ', password);
+      console.log('hashPostPassword: ', await Usuario.hashPassword(password));
+      console.log('usuario pass: ', usuario.password);
 
       // Si no lo encuentro o no coincide la contraseña --> error
-      if (!usuario || password != usuario.password) {
+      if (!usuario || !(await usuario.comparePassword(password))) {
         res.locals.error = res.__('Invalid credentials');
         res.locals.email = email;
         res.locals.title = req.title;

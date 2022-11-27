@@ -30,7 +30,7 @@ async function main() {
   connection.close();
 }
 
-main().catch((err) => console.log('Hubo un error:', err));
+main().catch((err) => console.log('There was an error:', err));
 
 /**
  * Initialize ads collection
@@ -38,16 +38,40 @@ main().catch((err) => console.log('Hubo un error:', err));
 async function initAds() {
   // Delete all documents
   const deleted = await Advertisement.deleteMany();
-  console.log(`Eliminados ${deleted.deletedCount} anuncios.`);
+  console.log(`Deleted ${deleted.deletedCount} advertisements.`);
 
   //Synchronize the indexes
   const syncIndex = await Advertisement.syncIndexes();
-  console.log(`Revisados ${syncIndex} índices`);
+  console.log(`Reviewed ${syncIndex} index`);
 
   // Load intial ads
   const adsFile = require('./anunciosBase.json');
   const inserted = await Advertisement.insertMany(adsFile.advertisements);
-  console.log(`Creados ${inserted.length} anuncios.`);
+  console.log(`Created ${inserted.length} advertisements.`);
+}
+
+function loadUsersFromFile() {
+  return new Promise((resolve, reject) => {
+    const usersFile = require('./usuariosBase.json');
+    let users = [];
+    usersFile.usuarios.forEach(async (usuario) => {
+      let password = usuario.password;
+      if (typeof password !== 'string') {
+        password = `${password}`;
+      }
+      Usuario.hashPassword(password).then((value) => {
+        password = value;
+        const newUser = {
+          email: usuario.email,
+          password: password,
+        };
+        users = users.concat([newUser]);
+        console.log(users);
+      });
+    });
+
+    resolve(users);
+  });
 }
 
 /**
@@ -63,13 +87,17 @@ async function initUsers() {
   console.log(`Review ${syncIndex} user index`);
 
   // Load intial ads
-  const usersFile = require('./usuariosBase.json');
-  const inserted = await Usuario.insertMany(usersFile.usuarios);
+  //TODO
+  //  const users = await loadUsersFromFile();
+  const users = [
+    { email: 'user@example.com', password: await Usuario.hashPassword('1234') },
+  ];
+  const inserted = await Usuario.insertMany(users);
   console.log(`Created ${inserted.length} users.`);
 }
 
 /**
- * Funtion to ask a question
+ * Function to ask a question
  * @param {string} texto String to present in console
  * @returns Promise returns true if the answer is "si", false in other case.
  */

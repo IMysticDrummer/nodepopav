@@ -1,7 +1,7 @@
 'use strict';
 // Comment to evite eslint no-undef error
 /* global process */
-
+require('dotenv').config();
 const readline = require('readline');
 const i18n = require('i18n');
 
@@ -59,16 +59,20 @@ function loadUsersFromFile() {
       if (typeof password !== 'string') {
         password = `${password}`;
       }
-      Usuario.hashPassword(password).then((value) => {
-        password = value;
+      try {
+        const hashPassword = await Usuario.hashPassword(password);
         const newUser = {
           email: usuario.email,
-          password: password,
+          password: hashPassword,
         };
         users = users.concat([newUser]);
-      });
+        console.log('new user: ', newUser);
+      } catch (err) {
+        console.log('ERROR: ', err);
+        reject(err);
+      }
     });
-
+    console.log('usuarios: ', users);
     resolve(users);
   });
 }
@@ -87,12 +91,20 @@ async function initUsers() {
 
   // Load intial ads
   //TODO
-  //  const users = await loadUsersFromFile();
-  const users = [
-    { email: 'user@example.com', password: await Usuario.hashPassword('1234') },
-  ];
-  const inserted = await Usuario.insertMany(users);
-  console.log(`Created ${inserted.length} users.`);
+  try {
+    //const users = await loadUsersFromFile();
+    const users = [
+      {
+        email: 'user@example.com',
+        password: await Usuario.hashPassword('1234'),
+      },
+    ];
+    console.log(users);
+    const inserted = await Usuario.insertMany(users);
+    console.log(`Created ${inserted.length} users.`);
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 /**

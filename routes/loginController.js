@@ -3,18 +3,20 @@ const { Usuario } = require('../models');
 const jwt = require('jsonwebtoken');
 
 class LoginController {
+  //GET response to login page
+  //Put's locals variables in the start configuration
   index(req, res, next) {
-    res.locals.title = req.title;
     res.locals.page = 'login';
     res.locals.error = '';
     res.locals.email = '';
     res.render('login');
   }
 
+  //POST response to login page
   async post(req, res, next) {
     const { email, password } = req.body;
 
-    //Buscar en BDD
+    //DB search
     try {
       const usuario = await Usuario.findOne({ email });
 
@@ -22,7 +24,6 @@ class LoginController {
       if (!usuario || !(await usuario.comparePassword(password))) {
         res.locals.error = res.__('Invalid credentials');
         res.locals.email = email;
-        res.locals.title = req.title;
         res.locals.page = 'login';
         res.render('login');
         return;
@@ -38,6 +39,7 @@ class LoginController {
     }
   }
 
+  //GET response to a logout request
   logout(req, res, next) {
     req.session.regenerate((err) => {
       if (err) {
@@ -48,6 +50,7 @@ class LoginController {
     });
   }
 
+  //Response to a login request from API
   async postJWT(req, res, next) {
     const { email, password } = req.body;
 

@@ -1,3 +1,4 @@
+//express configuration
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -5,11 +6,14 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const sesion = require('express-session');
 
+//security middlewares
 const sessionAuth = require('./lib/sessionAuthMiddleware');
 const jwtAuthMiddelware = require('./lib/jwtAuthMiddleware');
+
+//internationalization middlewares
 const i18n = require('./lib/i18nConfiguration');
 
-//Routes
+//Routes configuration
 var indexRouter = require('./routes/index');
 var apiRouter = require('./routes/api/ads');
 const LoginController = require('./routes/loginController');
@@ -40,6 +44,7 @@ app.use('/favicon.ico', (req, res, next) => {
   res.send();
 });
 
+// loginController intialitation
 const loginController = new LoginController();
 
 /* API request */
@@ -49,20 +54,9 @@ app.use('/api/login', loginController.postJWT);
 /* Web configuration */
 app.use(i18n.init);
 
-const titleMiddleware = (req, res, next) => {
-  req.title = 'Nodepop';
-  req.title +=
-    ' - ' +
-    i18n.__({
-      phrase: 'The Web for purchase-sale second-hand articles',
-      locale: req.cookies['nodepop-locale'] || i18n.getLocale(req),
-    });
-  next();
-};
-
 /* Web request */
 
-//Inicio de sesión
+//Session start
 //TODO implementar el almacén de sesión
 app.use(
   sesion({
@@ -76,17 +70,30 @@ app.use(
   })
 );
 
-//Sesión visible por todas las vistas
+//All views can see this session
 app.use((req, res, next) => {
   res.locals.session = req.session;
   next();
 });
 
-app.use('/', titleMiddleware, indexRouter);
+//International Title to be used for all views
+app.use((req, res, next) => {
+  app.locals.title = 'Nodepop';
+  app.locals.title +=
+    ' - ' +
+    i18n.__({
+      phrase: 'The Web for purchase-sale second-hand articles',
+      locale: req.cookies['nodepop-locale'] || i18n.getLocale(req),
+    });
+  next();
+});
+
+//Web routes
+app.use('/', indexRouter);
 app.use('/change-lang', require('./routes/change-lang'));
-app.get('/login', titleMiddleware, loginController.index);
-app.post('/login', titleMiddleware, loginController.post);
-app.use('/prueba', sessionAuth, titleMiddleware, indexRouter);
+app.get('/login', loginController.index);
+app.post('/login', loginController.post);
+app.use('/prueba', sessionAuth, indexRouter);
 app.get('/logout', loginController.logout);
 
 // catch 404 and forward to error handler

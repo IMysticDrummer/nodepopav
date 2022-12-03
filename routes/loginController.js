@@ -67,10 +67,15 @@ class LoginController {
         expiresIn: '2d',
       });
 
-      //--> llevar a zona privada
+      //--> responde con token
       res.json({ token });
-    } catch (error) {
-      next(error);
+    } catch (err) {
+      res.status(500);
+      let message;
+      err.message === 'secretOrPrivateKey must have a value'
+        ? (message = 'Server Error. This server has not private key')
+        : (message = 'Undefined Server error');
+      res.json({ error: message });
     }
   }
 }

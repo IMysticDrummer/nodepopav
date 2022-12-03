@@ -55,7 +55,7 @@ const titleMiddleware = (req, res, next) => {
     ' - ' +
     i18n.__({
       phrase: 'The Web for purchase-sale second-hand articles',
-      locale: req.cookies['nodepop-locale'],
+      locale: req.cookies['nodepop-locale'] || i18n.getLocale(req),
     });
   next();
 };

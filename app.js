@@ -43,7 +43,7 @@ app.use('/favicon.ico', (req, res, next) => {
 const loginController = new LoginController();
 
 /* API request */
-app.use('/api', jwtAuthMiddelware, apiRouter);
+app.use('/api/anuncios', jwtAuthMiddelware, apiRouter);
 app.use('/api/login', loginController.postJWT);
 
 /* Web configuration */

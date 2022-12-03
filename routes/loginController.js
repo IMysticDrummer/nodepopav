@@ -57,12 +57,11 @@ class LoginController {
 
       // Si no lo encuentro o no coincide la contraseña --> error
       if (!usuario || !(await usuario.comparePassword(password))) {
-        //TODO res.status=401;
+        res.status(401);
         res.json({ error: 'Invalid credentials' });
         return;
       }
       //Si existe y coincide
-
       //Generar un token JWT con su _id
       const token = jwt.sign({ _id: usuario.id }, process.env.JWT_SECRET, {
         expiresIn: '2d',

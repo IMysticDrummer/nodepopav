@@ -51,28 +51,28 @@ async function initAds() {
 }
 
 function loadUsersFromFile() {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     const usersFile = require('./usuariosBase.json');
     let users = [];
-    usersFile.usuarios.forEach(async (usuario) => {
-      let password = usuario.password;
+
+    for (let index = 0; index < usersFile.usuarios.length; index++) {
+      const element = usersFile.usuarios[index];
+      let password = element.password;
       if (typeof password !== 'string') {
         password = `${password}`;
       }
       try {
         const hashPassword = await Usuario.hashPassword(password);
         const newUser = {
-          email: usuario.email,
+          email: element.email,
           password: hashPassword,
         };
         users = users.concat([newUser]);
-        console.log('new user: ', newUser);
       } catch (err) {
         console.log('ERROR: ', err);
         reject(err);
       }
-    });
-    console.log('usuarios: ', users);
+    }
     resolve(users);
   });
 }
@@ -90,16 +90,8 @@ async function initUsers() {
   console.log(`Review ${syncIndex} user index`);
 
   // Load intial ads
-  //TODO
   try {
-    //const users = await loadUsersFromFile();
-    const users = [
-      {
-        email: 'user@example.com',
-        password: await Usuario.hashPassword('1234'),
-      },
-    ];
-    console.log(users);
+    const users = await loadUsersFromFile();
     const inserted = await Usuario.insertMany(users);
     console.log(`Created ${inserted.length} users.`);
   } catch (err) {

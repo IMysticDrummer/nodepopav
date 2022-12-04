@@ -6,7 +6,7 @@
     "start": "node ./bin/www",
     "dev": "DEBUG=nodepop:* npx nodemon ./bin/www",
     "devWin": "set DEBUG=nodepop:* & npx nodemon ./bin/www",
-    "initdb": "node initDb.js",
+    "initdb": "node initDB.js",
     "sintax": "npx eslint  . --ext .js"
   },
   "dependencies": {
@@ -22,7 +22,8 @@
     "i18n": "^0.15.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.5.5",
-    "morgan": "~1.9.1"
+    "morgan": "~1.9.1",
+    "multer": "^1.4.5-lts.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.19"

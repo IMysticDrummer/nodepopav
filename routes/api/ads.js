@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const { validationResult } = require('express-validator');
 const { Advertisement, tagsPermitted } = require('../../models');
+const fileUpload = require('../../lib/fileUpload');
+const path = require('path');
 
 //Route /api?...
 router.get('/', Advertisement.dataValidator('get'), async (req, res, next) => {
@@ -46,51 +48,66 @@ router.get('/alltags', async (req, res) => {
 
 //Router / method POST --> Save a new advertisement
 //next param is not going to be use. Deleted from the function call
-router.post('/', Advertisement.dataValidator('post'), async (req, res) => {
-  //Data validation
-  try {
-    validationResult(req).throw();
-  } catch (error) {
-    return res.status(422).json({ error: error.array() });
-  }
+router.post(
+  '/',
+  fileUpload,
+  Advertisement.dataValidator('post'),
+  async (req, res) => {
+    //Data validation
+    try {
+      validationResult(req).throw();
+      if (!req.file) {
+        throw new Error('Image must be provided');
+      }
+    } catch (error) {
+      if (error.message === 'Image must be provided') {
+        const status = 400;
+        res.status(status);
+        res.json({ status, error: error.message });
+        return;
+      }
+      return res.status(422).json({ error: error.array() });
+    }
 
-  //Tags format
-  let tagsTemp;
-  if (typeof req.body.tags === 'string') {
-    tagsTemp = [req.body.tags];
-  } else {
-    tagsTemp = req.body.tags;
-  }
+    //Tags format
+    let tagsTemp;
+    if (typeof req.body.tags === 'string') {
+      tagsTemp = [req.body.tags];
+    } else {
+      tagsTemp = req.body.tags;
+    }
 
-  //Model
-  const ad = new Advertisement({
-    nombre: req.body.nombre,
-    venta: false || req.body.venta,
-    precio: 0 || parseFloat(req.body.precio),
-    foto: req.body.foto,
-    tags: tagsTemp,
-  });
+    const splitPath = req.file.destination.split('public');
+    const fileName = splitPath[1] + '/' + req.file.filename;
 
-  //Saving document in DB
-  try {
-    const adCreated = await ad.save();
-    res
-      .status(201)
-      .json({
+    //Model
+    const ad = new Advertisement({
+      nombre: req.body.nombre,
+      venta: false || req.body.venta,
+      precio: 0 || parseFloat(req.body.precio),
+      foto: fileName,
+      tags: tagsTemp,
+    });
+
+    //Saving document in DB
+    try {
+      const adCreated = await ad.save();
+      res.status(201).json({
         result: {
           id: adCreated.__id,
           msg: `Anuncio ${adCreated.nombre} succesfully created`,
         },
       });
-  } catch (error) {
-    //If it's validation error, the object error has not array function.
-    try {
-      const fail = error.array();
-      return res.status(422).json({ error: fail });
-    } catch (err) {
-      return res.status(422).json({ error: error });
+    } catch (error) {
+      //If it's validation error, the object error has not array function.
+      try {
+        const fail = error.array();
+        return res.status(422).json({ error: fail });
+      } catch (err) {
+        return res.status(422).json({ error: error });
+      }
     }
   }
-});
+);
 
 module.exports = router;

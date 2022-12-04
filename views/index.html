@@ -8,7 +8,7 @@
             <h2 class="articleTitle"><%=__('Article')%>: <%= element.nombre  %> </h2>
           <%}%>
           <% if (element.foto) {%>
-            <img class="articleImg" src="/images/anuncios/<%= element.foto%>" alt="<%= element.foto%>"></picture>
+            <img class="articleImg" src="<%= element.foto%>" alt="<%= element.foto%>"></picture>
           <%}%>
 
             <% if (element.venta===true) { %>

@@ -122,25 +122,13 @@ adsSquema.statics.dataValidator = function (method) {
       body('nombre')
         .isString()
         .toLowerCase()
-        .withMessage('nombre must exist and be an string'),
+        .withMessage('nombre must exist and be an string '),
       body('venta')
         .isBoolean()
         .withMessage('venta must exist and be true or false'),
       body('precio')
         .isFloat()
         .withMessage('precio must exist and must be integer or float'),
-      body('foto')
-        .toLowerCase()
-        .custom((value) => {
-          const name = value.split('.');
-          return (
-            false ||
-            name[name.length - 1] === 'jpg' ||
-            name[name.length - 1] === 'jpeg' ||
-            name[name.length - 1] === 'png'
-          );
-        })
-        .withMessage('foto file must be an jpg, jpeg or png format'),
       body('tags')
         .custom((value) => {
           return false || typeof value === 'string' || Array.isArray(value);

@@ -1,21 +1,30 @@
 # NODEPOP
 
-Práctica de desarrollo backend avanzado para keepcoding web13.  
-Mejoara del API de desarrollo backend. Resueltas las indicaciones del profesor sobre la primera versión:
+Práctica de desarrollo backend **avanzado** para keepcoding web13.  
+Mejora del API de desarrollo backend. Resueltas las indicaciones del profesor sobre la primera versión:
 
 - Inicializador de la base de datos en el package.json
-  API del portal de anuncios de compra-venta de segunda mano.  
-  Listar, filtrar, paginar y ordenar desde la URL.  
-  Crear a través de petición post.  
-  Servir archivos por llamado directo desde la URL.  
-  Web básica mostrando los anuncios.
+- El API devueve siempre los errores en formato JSON
+
+API del portal de anuncios de compra-venta de segunda mano.  
+Listar, filtrar, paginar y ordenar desde la URL.  
+Crear a través de petición post.  
+Servir archivos por llamado directo desde la URL.  
+Web básica mostrando los anuncios.
+
+**Nuevas características**  
+El API sube archivos de fotos para los anuncios cuando se crean.  
+El campo **foto** es **obligatorio** para crear un anuncio.
+
+El API de Nodepop proporciona un microservicio que crea thumbnails de las fotos subidas. Dichas fotos son guardadas en el directorio `/public/images/thumbnails`.  
+Dicho directorio de estar creado. Asegurar cuando se clone el repositorio que dicho directorio existe.
 
 # PRERREQUISITOS PARA USAR LA APLICACIÓN
 
 ## Clonar el repositorio en local
 
 Repositorio:  
-[Nodepop](https://github.com/IMysticDrummer/nodepop.git)
+[Nodepopav](https://github.com/IMysticDrummer/nodepopav.git)
 
 ## Instalar dependencias
 
@@ -26,12 +35,18 @@ No olvidar instalar las dependencias con el comando `npm install`.
 La base de datos se llamará `nodepop`.  
 La colección se llamará `advertisements`.  
 Asegurar que el archivo `anunciosBase.json` está disponible cuando se ha clonado el repositorio.  
-Correr el comando `node initDB.js`  
+Correr el comando `npm run initdb`  
 El script se encargará de crear los índices necesarios, y subir los anuncios.
+También creará un **primer usuario**: user@example.com, con _password_ 1234.
 
 # Arranque de la aplicación
 
-**Arranque en producción: `npm start`**  
+**Arranque en producción de todos los servicios (incluyendo thumbnailer): `npm start`**  
+_Arranque de los servicios por separado_:
+
+- npm run startNodepop --> Arranca sólo la aplicación, sin el thumbnailer.
+- npm run startThumbnailer --> Arranca sólo el thumbNailer, sin la aplicación.
+
 Modo desarrollo en windows: `npm run devWin`  
 Modo desarrollo en plataformas linux: `npm run dev`
 
@@ -116,9 +131,9 @@ Sobre la dirección principal, y de la misma forma que se indican los filtros, s
 
 ## Imágenes
 
-Para acceder a las imágenes de los anuncios, basta con pedir al API el
-servicio de las misma en la dirección url /images/anuncios/_nombre-archivo.extension_.  
-Por ejemplo: `http://localhost:3000/images/anuncios/bici.jpeg`.
+Para acceder a las imágenes de los anuncios, basta con añadir a la dirección principal de la URL, el resultado del campo **foto**.  
+Por ejemplo, si el campo foto indica `/images/anuncios/bici.jpeg`, la dirección de acceso a la foto será:  
+`http://localhost:3000/images/anuncios/bici.jpeg`.
 
 ---
 
@@ -145,7 +160,7 @@ por lo que es obligatorio llenarlos.
   True o 1 significa que el artículo se pone a la venta por ese precio
 - **precio** --> el precio de venta del artículo, o el presupuesto de búsqueda del mismo.  
   **_Atención:_** El separador de decimales se hace con **`.`**
-- **foto**: nombre del archivo que contiene la foto del anuncio. Debe ser formato jpg, jpeg o png. La API controla la extensión.
+- **foto**: nombre del archivo que contiene la foto del anuncio. Debe ser una imagen en formato jpeg, bmp, png, tiff o giff. Cualquier otro formato resultará en un error de creación del anuncio.
 - **tags**: debe ser un string, en el caso de que sea un sólo valor, o un array de strings en el caso de varios tags asociados al anuncio.  
   **_Atención_**: los valores permitidos son los mismos indicados anteriormente en este manual. La API controla tanto el formato como el contenido.
 

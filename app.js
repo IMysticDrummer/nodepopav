@@ -17,6 +17,7 @@ const i18n = require('./lib/i18nConfiguration');
 var indexRouter = require('./routes/index');
 var apiRouter = require('./routes/api/ads');
 const LoginController = require('./routes/loginController');
+const APIError = require('./routes/api/APIError');
 
 var app = express();
 
@@ -47,9 +48,12 @@ app.use('/favicon.ico', (req, res, next) => {
 // loginController intialitation
 const loginController = new LoginController();
 
+const apiError = new APIError();
+
 /* API request */
 app.use('/api/anuncios', jwtAuthMiddelware, apiRouter);
 app.use('/api/login', loginController.postJWT);
+app.all('/api/*', apiError.all);
 
 /* Web configuration */
 app.use(i18n.init);

@@ -58,10 +58,15 @@ router.post(
     try {
       validationResult(req).throw();
       if (!req.file) {
-        throw new Error('Image must be provided');
+        throw new Error(
+          'Image must be provided. Formats permitted: jpeg, png, bmp, tiff, giff'
+        );
       }
     } catch (error) {
-      if (error.message === 'Image must be provided') {
+      if (
+        error.message ===
+        'Image must be provided. Formats permitted: jpeg, png, bmp, tiff, giff'
+      ) {
         const status = 400;
         res.status(status);
         res.json({ status, error: error.message });

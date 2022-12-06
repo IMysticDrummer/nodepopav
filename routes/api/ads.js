@@ -4,6 +4,7 @@ const { validationResult } = require('express-validator');
 const { Advertisement, tagsPermitted } = require('../../models');
 const fileUpload = require('../../lib/fileUpload');
 const path = require('path');
+const { Requester } = require('cote');
 
 //Route /api?...
 router.get('/', Advertisement.dataValidator('get'), async (req, res, next) => {
@@ -87,6 +88,17 @@ router.post(
       precio: 0 || parseFloat(req.body.precio),
       foto: fileName,
       tags: tagsTemp,
+    });
+
+    const requester = new Requester({ name: 'thumbnailer create requester' });
+    const request = {
+      type: 'thumbnailer',
+      fileName,
+      destination: '/images/thumbnails',
+    };
+
+    requester.send(request, (result) => {
+      console.log(result);
     });
 
     //Saving document in DB

@@ -1,6 +1,7 @@
 'use strict';
 
 const request = require('supertest');
+require('../bin/allService');
 const app = require('../app');
 
 describe('Testing API endpoints', () => {

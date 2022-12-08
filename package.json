@@ -9,7 +9,9 @@
     "dev": "DEBUG=nodepop:* npx nodemon ./bin/www",
     "devWin": "set DEBUG=nodepop:* & npx nodemon",
     "initdb": "node initDB.js",
-    "sintax": "npx eslint  . --ext .js"
+    "sintax": "npx eslint  . --ext .js",
+    "test:int": "jest ./__test__/api.test.js",
+    "test": "jest"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",

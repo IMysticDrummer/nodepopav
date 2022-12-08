@@ -19,6 +19,9 @@ router.get('/', Advertisement.dataValidator('get'), async (req, res, next) => {
   //Adding page indicator
   data.page = 'index';
 
+  //User
+  data.email=req.userEmail;
+
   //Search and render
   try {
     data.ads = await Advertisement.search(

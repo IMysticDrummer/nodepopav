@@ -5,10 +5,12 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const sesion = require('express-session');
+const MongoStore = require('connect-mongo');
 
 //security middlewares
 const sessionAuth = require('./lib/sessionAuthMiddleware');
 const jwtAuthMiddelware = require('./lib/jwtAuthMiddleware');
+const loggedDataController= require('./lib/loggedDataController');
 
 //internationalization middlewares
 const i18n = require('./lib/i18nConfiguration');
@@ -73,6 +75,9 @@ app.use(
     cookie: {
       maxAge: 1000 * 60 * 60 * 24 * 2,
     },
+    store: MongoStore.create({
+      mongoUrl: process.env.DB_URL
+    })
   })
 );
 
@@ -95,12 +100,11 @@ app.use((req, res, next) => {
 });
 
 //Web routes
-app.use('/', indexRouter);
 app.use('/change-lang', require('./routes/change-lang'));
 app.get('/login', loginController.index);
 app.post('/login', loginController.post);
-app.use('/prueba', sessionAuth, indexRouter);
 app.get('/logout', loginController.logout);
+app.use('/', sessionAuth, loggedDataController ,indexRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

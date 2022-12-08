@@ -6,7 +6,7 @@ class APIError {
 
     const response = {
       status,
-      message: "API page doesn't found",
+      error: "API page doesn't found",
     };
     res.status(status);
     res.json(response);

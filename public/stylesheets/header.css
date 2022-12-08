@@ -20,14 +20,6 @@ header {
 
 }
 
-.imgLogo{
-  order: 1;
-  border: 1px black solid;
-  
-  width: 10%;
-  padding: 1%;
-}
-
 aside{
   order:3;
   padding: 1%;
@@ -38,6 +30,7 @@ nav {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+
 }
 nav>section {
   display: flex;
@@ -54,6 +47,7 @@ h4 {
 .filters > li, .pagination > li{
   display: inline-block;
   justify-content: space-between;
+  min-width: 35px;
 }
 
 label {

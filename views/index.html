@@ -1,46 +1,54 @@
 <%- include('./header.html') %>
 
   <main>
+    <%- include('./nav.html') %>
     <section>
       <% ads.forEach(element => { %>
-        <article>
-          <% if (element.nombre) {%>
-            <h2 class="articleTitle"><%=__('Article')%>: <%= element.nombre  %> </h2>
-          <%}%>
-          <% if (element.foto) {%>
-            <img class="articleImg" src="<%= element.foto%>" alt="<%= element.foto%>"></picture>
-          <%}%>
+        <article class="container px-5">
+          <div class="row gx-5 align-items-center">
+            <div class="col-lg-3 order-lg-2">
+              <% if (element.foto) {%>
+                <div class="p-5"><img class="img-fluid rounded-circle" src="<%= element.foto%>" alt="<%= element.foto%>"></img></div>
+              <%}%>
+            </div>
+            <div class="col-lg-6 order-lg-1">
+              <% if (element.nombre) {%>
+                <h2 class="display-6"><%=__('Article')%>: <%= element.nombre  %> </h2>
+              <%}%>
 
-            <% if (element.venta===true) { %>
-              <h4 class="sale"><%=__('SELLING')%></h4>
-            <% } else { %>
-              <h4 class="sale"><%=__('SEARCHING')%></h4>
-            <%}%>
+              <% if (element.venta===true) { %>
+                <h4 class="display-8"><%=__('SELLING')%></h4>
+              <% } else { %>
+                <h4 class="display-8"><%=__('SEARCHING')%></h4>
+              <%}%>
 
-          <% if (element.tags) {%>
-            <p class="tags"><%=__('TAGS')%></p>
-            <p>
-              <% element.tags.forEach(tag => {%>
-                <span><%=tag%> ; </span>
-              <%})%>
-            </p>
-          <%}%>
-          <% if (element.precio) {%>
-            <h3 class="price"><%=__('PRICE')%></h3>
-            <p class="priceElement"><%= element.precio %></p>
-          <%}%>
-          <% if (element._id) {%>
-            <p class="infos"><%=__('Other info')%></p>
-            <p>id:<%= element._id %> ; __v: <%= element.__v %></p>
-          <%}%>
+              <% if (element.tags) {%>
+                <h4 class="display-9"><%=__('TAGS')%></h4>
+                <p>
+                  <% element.tags.forEach(tag => {%>
+                    <span><%=tag%> ; </span>
+                  <%})%>
+                </p>
+              <%}%>
+              <% if (element.precio) {%>
+                <h3 class="display-8"><%=__('PRICE')%></h3>
+                <p class="priceElement"><%= element.precio %></p>
+              <%}%>
+              <% if (element._id) {%>
+                <p class="infos"><%=__('Other info')%></p>
+                <p>id:<%= element._id %> ; __v: <%= element.__v %></p>
+              <%}%>
+            </div>
+          </div>
         </article>
         <hr/>
       <% }); %>
     </section>
   </main>
 
-  <footer>
-    <p><%=__('copyrigth and social networks')%></p>
+  <!-- Footer-->
+  <footer class="py-5 bg-black">
+    <div class="container px-5"><p class="m-0 text-center text-white small">&copy; <%=__('copyrigth and social networks')%></p></div>
   </footer>
   
 </body>

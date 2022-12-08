@@ -60,8 +60,9 @@ class LoginController {
 
       // Si no lo encuentro o no coincide la contraseña --> error
       if (!usuario || !(await usuario.comparePassword(password))) {
-        res.status(401);
-        res.json({ error: 'Invalid credentials' });
+        const status = 401;
+        res.status(status);
+        res.json({ status, error: 'Invalid credentials' });
         return;
       }
       //Si existe y coincide
@@ -73,12 +74,13 @@ class LoginController {
       //--> responde con token
       res.json({ token });
     } catch (err) {
-      res.status(500);
+      const status = 500;
+      res.status(status);
       let message;
       err.message === 'secretOrPrivateKey must have a value'
         ? (message = 'Server Error. This server has not private key')
         : (message = 'Undefined Server error');
-      res.json({ error: message });
+      res.json({ status, error: message });
     }
   }
 }

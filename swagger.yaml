@@ -1,0 +1,341 @@
+openapi: '3.0.3'
+info:
+  title: Nodepop - API 1.0
+  description: This is the advertisements web/sell Nodepop API.
+
+    Thru this API you can login, create advertisements, get advertisements, and get tags, for your own application.
+
+    You can also see the test website to compare your results in [NodePop Website](localhost:3000)
+
+  contact:
+    email: ivan.garcia.rodriguez@hotmail.es
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Nodepop
+  url: https://github.com/IMysticDrummer/nodepopav.git
+paths:
+  /api-docs:
+    get:
+      tags:
+        - documentation
+      summary: Show this web docs
+      description: Show this web documentation and testing page
+      operationId: api-docs
+      responses:
+        '200':
+          description: Successful operation
+  /api/login:
+    post:
+      tags:
+        - login
+      summary: log into API
+      description: Log in the API sending mail and password
+      operationId: loginAPI
+      requestBody:
+        description: Log in the API
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorSchema'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorSchema'
+  /api/anuncios:
+    get:
+      tags:
+        - anuncios
+      summary: get the advertisements
+      operationId: getAds
+      description: Get the advertisements. Filters can be applied
+      parameters:
+        - name: token
+          in: query
+          description: authorization token can be provided in query under this parameter or en header, under Authorization key
+          schema:
+            type: string
+        - name: nombre
+          in: query
+          description: part of the name to filter by
+          schema:
+            type: string
+            example: bici
+        - name: venta
+          in: query
+          description: true for articles selling, false for articles buying
+          schema:
+            type: boolean
+            example: true
+        - name: precio
+          in: query
+          description: range of price. "number" search the right coincidence. "number-" search range from number and above. "number-number" search between numbers. "-number" search range from number and below. **"number"** must be alwais **integer numbers**.
+          schema:
+            type: string
+            example: 20-50
+        - name: tag
+          in: query
+          description: tag to filter by
+          schema:
+            type: string
+            example: lifestyle
+        - name: fields
+          in: query
+          description: returns only the indicated fields. Several fields can be selected, joining by "+". If DB _id is not desired, this can be retired adding "%20-_id"
+          schema:
+            type: string
+            example: nombre+precio%20-_id
+        - name: skip
+          in: query
+          description: skips the indicated advertisements from the DB results. This is usefull to manager the pagination
+          schema:
+            type: integer
+            example: 5
+        - name: limit
+          in: query
+          description: limit the results recived from the DB. This is usefull to manager the pagination
+          schema:
+            type: integer
+            example: 10
+        - name: sort
+          in: query
+          description: set the champ to make the sort of the DB results
+          schema:
+            type: string
+            example: precio
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAd'
+        '422':
+          description: data entry error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataErrorSchema'
+        '500':
+          description: server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorSchema'
+      security:
+        - Authorization: []
+
+    post:
+      tags:
+        - anuncios
+      summary: Create a new advertisement
+      description: Create a new advertisement
+      operationId: newAd
+      parameters:
+        - name: token
+          in: query
+          description: authorization can be provided under this parameter in query, or under Authorization key in header
+          schema:
+            type: string
+      requestBody:
+        description: Create a new add with its fields.
+          All fields are required. "foto" must be a path to an image format file. Formats acceptted... jpeg, png, bmp, gif, tiff.
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/NewAd'
+            encoding:
+              foto:
+                contentType: image/png, image/jpeg, image/bmp, image/gif, image/tiff
+      responses:
+        '201':
+          description: Advertisement _article name_ succesfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdCreated'
+        '400':
+          description: Image must be provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorSchema'
+        '422':
+          description: Data entry error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataErrorSchema'
+      security:
+        - Authorization: []
+
+  /api/anuncios/alltags:
+    get:
+      tags:
+        - tags
+      operationId: tags
+      summary: Get the permitted tags, and how many advertisements exists of each tag
+      parameters:
+        - name: token
+          in: query
+          description: authorization token can be provided in query under this parameter or en header, under Authorization key
+          schema:
+            type: string
+      responses:
+        '200':
+          description: succesful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TagsSchema'
+      security:
+        - Authorization: []
+
+components:
+  schemas:
+    AdCreated:
+      type: object
+      definition: API response when an ad has been well created
+      properties:
+        result:
+          type: object
+          properties:
+            id:
+              type: string
+              description: advertisement id in DB
+            msg:
+              type: string
+              description: Advertisement _"advertisement name"_ susccesfully created
+              example: Advertisement bycicle susccesfully created
+    Advertisement:
+      type: object
+      definition: Advertisement object
+      required:
+        - nombre
+        - venta
+        - precio
+        - tags
+        - foto
+      properties:
+        nombre:
+          type: string
+          description: name of the article
+        venta:
+          type: boolean
+          description: true for a article selled, false for an article buyed
+        precio:
+          type: integer
+          description: price or budget of the article
+        tags:
+          type: array
+          description: array of tags related with the article
+          items:
+            type: string
+        foto:
+          type: string
+          description: path to find the photo of the article
+    DataErrorSchema:
+      type: object
+      description: Error object response when it's caused by an enter error data
+      properties:
+        status:
+          type: integer
+        error:
+          type: array
+          items:
+            type: string
+    ErrorSchema:
+      type: object
+      description: General error object response
+      properties:
+        status:
+          type: integer
+        error:
+          type: string
+    GetAd:
+      type: object
+      description: Array of advertisements
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Advertisement'
+    NewAd:
+      type: object
+      description: Object definition for a new advertisement
+      required:
+        - nombre
+        - venta
+        - precio
+        - tags
+        - foto
+      properties:
+        nombre:
+          type: string
+          description: name of the article
+          example: bici
+        venta:
+          type: boolean
+          description: true for an article to sell, false for an article to buy
+          example: true
+        precio:
+          type: integer
+          description: price of the an article to sell or budget for an article to buy
+          example: 50
+        tags:
+          type: array
+          description: array with the tags relationed with the advertisement.
+          items:
+            type: string
+        foto:
+          type: string
+          format: binary
+          description: Select a file to be upload to the server. It must be an image
+    Login:
+      type: object
+      description: login object definition
+      properties:
+        email:
+          type: string
+          format: email
+          example: someone@dominion.com
+        password:
+          type: string
+          example: passwordchain
+    TagsSchema:
+      type: object
+      description: tags object definition for a tags response
+      properties:
+        lifestyle:
+          type: number
+        work:
+          type: number
+        mobile:
+          type: number
+        motor:
+          type: number
+    Token:
+      type: object
+      properties:
+        token:
+          type: string
+
+  securitySchemes:
+    Authorization:
+      type: apiKey
+      name: Authorization
+      in: header

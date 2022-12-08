@@ -52,6 +52,10 @@ Modo desarrollo en plataformas linux: `npm run dev`
 
 # USO DEL API
 
+## Documentación en línea
+
+Una vez arrancada la aplicación, se puede acceder a http://localhost:3000/api-docs para documentación swagger en línea.
+
 ## Propósito
 
 Este API devuelve el listado de anuncios de Nodepop en formato JSON, compuesto por la clave `results`, que cotiene un array de objetos.  

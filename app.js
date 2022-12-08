@@ -18,6 +18,7 @@ var indexRouter = require('./routes/index');
 var apiRouter = require('./routes/api/ads');
 const LoginController = require('./routes/loginController');
 const APIError = require('./routes/api/APIError');
+const swaggerMiddleware = require('./lib/swaggerMiddleware');
 
 var app = express();
 
@@ -53,6 +54,7 @@ const apiError = new APIError();
 /* API request */
 app.use('/api/anuncios', jwtAuthMiddelware, apiRouter);
 app.use('/api/login', loginController.postJWT);
+app.use('/api-docs', swaggerMiddleware);
 app.all('/api/*', apiError.all);
 
 /* Web configuration */

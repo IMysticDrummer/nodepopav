@@ -5,13 +5,15 @@ const { Advertisement, tagsPermitted } = require('../../models');
 const fileUpload = require('../../lib/fileUpload');
 const path = require('path');
 const { Requester } = require('cote');
+const fs = require('fs');
 
 //Route /api?...
 router.get('/', Advertisement.dataValidator('get'), async (req, res, next) => {
   try {
     validationResult(req).throw();
   } catch (error) {
-    return res.status(422).json({ error: error.array() });
+    const status = 422;
+    return res.status(status).json({ status, error: error.array() });
   }
 
   //Extracting the data for search
@@ -27,7 +29,8 @@ router.get('/', Advertisement.dataValidator('get'), async (req, res, next) => {
     );
     res.json({ results: ads });
   } catch (error) {
-    next(error);
+    const status = 500;
+    return res.status(status).json({ status, error: error.message });
   }
 });
 
@@ -72,6 +75,10 @@ router.post(
         res.json({ status, error: error.message });
         return;
       }
+
+      const fileName = req.file.destination + '/' + req.file.filename;
+      fs.unlink(fileName);
+
       return res.status(422).json({ error: error.array() });
     }
 
@@ -95,6 +102,34 @@ router.post(
       tags: tagsTemp,
     });
 
+    //Saving document in DB
+    try {
+      const adCreated = await ad.save();
+      res.status(201).json({
+        result: {
+          id: adCreated.__id,
+          msg: `Advertisement ${adCreated.nombre} succesfully created`,
+        },
+      });
+    } catch (error) {
+      //If it's validation error, the object error has not array function.
+      //First thing is erase the image file uploaded
+      const fileName = req.file.destination + '/' + req.file.filename;
+      fs.unlink(fileName, (err) => {
+        if (err) {
+          console.log(err);
+        }
+      });
+      const status = 422;
+      try {
+        const fail = error.array();
+        return res.status(status).json({ status, error: fail });
+      } catch (err) {
+        return res.status(422).json({ status, error: error });
+      }
+    }
+
+    //Thumbnailer sólo cuando todo el proceso haya ido bien
     const requester = new Requester({ name: 'thumbnailer create requester' });
     const request = {
       type: 'thumbnailer',
@@ -105,25 +140,6 @@ router.post(
     requester.send(request, (result) => {
       console.log(result);
     });
-
-    //Saving document in DB
-    try {
-      const adCreated = await ad.save();
-      res.status(201).json({
-        result: {
-          id: adCreated.__id,
-          msg: `Anuncio ${adCreated.nombre} succesfully created`,
-        },
-      });
-    } catch (error) {
-      //If it's validation error, the object error has not array function.
-      try {
-        const fail = error.array();
-        return res.status(422).json({ error: fail });
-      } catch (err) {
-        return res.status(422).json({ error: error });
-      }
-    }
   }
 );
 

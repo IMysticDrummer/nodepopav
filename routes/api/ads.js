@@ -76,10 +76,14 @@ router.post(
         return;
       }
 
+      //If it's validation error, the object error has not array function.
+      //First thing is erase the image file uploaded
       const fileName = req.file.destination + '/' + req.file.filename;
-      fs.unlink(fileName);
+      fs.unlink(fileName, (err) => {
+        console.log(err);
+      });
 
-      return res.status(422).json({ error: error.array() });
+      return res.status(422).json({ status: 422, error: error.array() });
     }
 
     //Tags format
@@ -112,8 +116,7 @@ router.post(
         },
       });
     } catch (error) {
-      //If it's validation error, the object error has not array function.
-      //First thing is erase the image file uploaded
+      //If there's any problem creating the ad in DB, it's necessary delete the image file uploaded
       const fileName = req.file.destination + '/' + req.file.filename;
       fs.unlink(fileName, (err) => {
         if (err) {

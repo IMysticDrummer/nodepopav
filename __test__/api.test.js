@@ -312,13 +312,12 @@ describe('Testing API endpoints', () => {
         });
       });
     });
-    //TODO
+
     describe('POST Method', () => {
       const objectData = {
         nombre: 'prueba',
         venta: false,
         precio: 50,
-        foto: null,
         tags: ['lifestyle', 'work'],
       };
       it('should return 400 status and error object if image has not been set', (done) => {
@@ -333,6 +332,164 @@ describe('Testing API endpoints', () => {
               expect.objectContaining({
                 status: 400,
                 error: expect.any(String),
+              })
+            );
+          })
+          .end((err, res) => {
+            if (err) {
+              return done(err);
+            }
+            return done();
+          });
+      });
+      it('should return 422 status and error object if "nombre" has not been set', (done) => {
+        const objectData2 = { ...objectData, nombre: null };
+        request(app)
+          .post('/api/anuncios')
+          .set('Authorization', tokenAdquired)
+          .field('venta', false)
+          .field('precio', 50)
+          .field('tags', ['lifestyle', 'work'])
+          .attach('foto', './__test__/bici.jpeg')
+          .expect('Content-Type', /json/)
+          .expect(422)
+          .expect((res) => {
+            expect(res.body).toEqual(
+              expect.objectContaining({
+                status: 422,
+                error: expect.any(Array),
+              })
+            );
+          })
+          .end((err, res) => {
+            if (err) {
+              return done(err);
+            }
+            return done();
+          });
+      });
+      it('should return 422 status and error object if "venta" has not been set', (done) => {
+        const objectData2 = { ...objectData, nombre: null };
+        request(app)
+          .post('/api/anuncios')
+          .set('Authorization', tokenAdquired)
+          .field('nombre', 'prueba')
+          .field('precio', 50)
+          .field('tags', ['lifestyle', 'work'])
+          .attach('foto', './__test__/bici.jpeg')
+          .expect('Content-Type', /json/)
+          .expect(422)
+          .expect((res) => {
+            expect(res.body).toEqual(
+              expect.objectContaining({
+                status: 422,
+                error: expect.any(Array),
+              })
+            );
+          })
+          .end((err, res) => {
+            if (err) {
+              return done(err);
+            }
+            return done();
+          });
+      });
+      it('should return 422 status and error object if "precio" has not been set', (done) => {
+        const objectData2 = { ...objectData, nombre: null };
+        request(app)
+          .post('/api/anuncios')
+          .set('Authorization', tokenAdquired)
+          .field('nombre', 'prueba')
+          .field('venta', true)
+          .field('tags', ['lifestyle', 'work'])
+          .attach('foto', './__test__/bici.jpeg')
+          .expect('Content-Type', /json/)
+          .expect(422)
+          .expect((res) => {
+            expect(res.body).toEqual(
+              expect.objectContaining({
+                status: 422,
+                error: expect.any(Array),
+              })
+            );
+          })
+          .end((err, res) => {
+            if (err) {
+              return done(err);
+            }
+            return done();
+          });
+      });
+      it('should return 422 status and error object if "precio" is not a number', (done) => {
+        const objectData2 = { ...objectData, nombre: null };
+        request(app)
+          .post('/api/anuncios')
+          .set('Authorization', tokenAdquired)
+          .field('nombre', 'prueba')
+          .field('precio', 'test')
+          .field('venta', true)
+          .field('tags', ['lifestyle', 'work'])
+          .attach('foto', './__test__/bici.jpeg')
+          .expect('Content-Type', /json/)
+          .expect(422)
+          .expect((res) => {
+            expect(res.body).toEqual(
+              expect.objectContaining({
+                status: 422,
+                error: expect.any(Array),
+              })
+            );
+          })
+          .end((err, res) => {
+            if (err) {
+              return done(err);
+            }
+            return done();
+          });
+      });
+      it('should return 422 status and error object if "tags" is not been set', (done) => {
+        const objectData2 = { ...objectData, nombre: null };
+        request(app)
+          .post('/api/anuncios')
+          .set('Authorization', tokenAdquired)
+          .field('nombre', 'prueba')
+          .field('precio', 'test')
+          .field('venta', true)
+          .attach('foto', './__test__/bici.jpeg')
+          .expect('Content-Type', /json/)
+          .expect(422)
+          .expect((res) => {
+            expect(res.body).toEqual(
+              expect.objectContaining({
+                status: 422,
+                error: expect.any(Array),
+              })
+            );
+          })
+          .end((err, res) => {
+            if (err) {
+              return done(err);
+            }
+            return done();
+          });
+      });
+      it('should return 422 status and error object if "tags" has a non permitted word', (done) => {
+        const objectData2 = { ...objectData, nombre: null };
+        request(app)
+          .post('/api/anuncios')
+          .set('Authorization', tokenAdquired)
+          .field('nombre', 'prueba')
+          .field('precio', 'test')
+          .field('venta', true)
+          .field('tags', ['lifestyle', 'working'])
+          .attach('foto', './__test__/bici.jpeg')
+          .expect('Content-Type', /json/)
+          .expect(422)
+          .expect((res) => {
+            expect(res.body).toEqual(
+              expect.objectContaining({
+                status: 422,
+                error: expect.any(Array),
               })
             );
           })

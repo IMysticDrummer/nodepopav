@@ -11,7 +11,8 @@
     "initdb": "node initDB.js",
     "sintax": "npx eslint  . --ext .js",
     "test:int": "jest ./__test__/api.test.js",
-    "test": "jest --coverage"
+    "test": "jest --coverage --forceExit",
+    "test:watch": "jest --coverage --watchAll"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",

@@ -65,7 +65,7 @@ app.use(i18n.init);
 /* Web request */
 
 //Session start
-//TODO implementar el almacén de sesión
+//DONE implementar el almacén de sesión
 app.use(
   sesion({
     name: 'nodepop-session',

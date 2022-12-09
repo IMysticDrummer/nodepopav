@@ -81,7 +81,7 @@ adsSquema.statics.dataValidator = function (method) {
       query('tag')
         .if(query('tag').exists())
         .toLowerCase()
-        .isIn(['work', 'lifestyle', 'mobile', 'motor'])
+        .isIn(tagsPermitted)
         .withMessage(
           'You must indicate just one word (work, lifestyle, mobile or motor) to find a tag'
         ),

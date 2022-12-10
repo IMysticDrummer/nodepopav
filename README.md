@@ -1,5 +1,7 @@
 # NODEPOP
 
+### Iván García Rodríguez
+
 Práctica de desarrollo backend **avanzado** para keepcoding web13.  
 Mejora del API de desarrollo backend. Resueltas las indicaciones del profesor sobre la primera versión:
 
@@ -58,29 +60,27 @@ También creará un **primer usuario**: user@example.com, con _password_ 1234.
 **Arranque en producción de todos los servicios (incluyendo thumbnailer): `npm start`**  
 _Arranque de los servicios por separado_:
 
-- npm run startNodepop --> Arranca sólo la aplicación, sin el thumbnailer.
-- npm run startThumbnailer --> Arranca sólo el thumbNailer, sin la aplicación.
+- `npm run startNodepop` --> Arranca sólo la aplicación, sin el thumbnailer.
+- `npm run startThumbnailer` --> Arranca sólo el thumbNailer, sin la aplicación.
 
 Modo desarrollo en windows: `npm run devWin`  
 Modo desarrollo en plataformas linux: `npm run dev`
 
-**Problemas en el arranque**
-Si después de arrancar todos los servicios, al intentar entrar en la dirección base de la página web (http://localhost:3000), aparece algún error de usuario no encontrado, **borrar las cookies del navegador**, y volver a intentarlo.
+**Problemas en el arranque**  
+Este es un defecto **ya solucionado.**  
+Sin embargo, en el cado de que después de arrancar todos los servicios, al intentar entrar en la dirección base de la página web (http://localhost:3000), aparece algún error de usuario no encontrado, **borrar las cookies del navegador**, y volver a intentarlo.
 
 **Modos de test**
 
 - `npm run test`: ejecuta el "supertest" general. La prueba de generación de anuncios está deshabilitada, para no subir anuncios de prueba.
-- `npm run test:watch`: inicia el modo de vigilancia de supertest
-  Para comprobar el resultado del test completo sobre la aplicación, incluyendo el test de creación de anuncios, se incluye con este paquete el fichero `output-test-file` en el directorio raíz. Este fichero cotiene el coverage de la prueba completa.
+- `npm run test:watch`: inicia el modo de vigilancia de supertest  
+  Se incluye en este paquete el fichero `output-test-file`, donde está guardado el resultado del último test completo de la aplicación, antes de su puesta en el repositorio. Este fichero cotiene el coverage de la prueba completa.
 
 # USO DEL API
 
-## Documentación en línea
+## Documentación API en línea
 
 Una vez arrancada la aplicación, se puede acceder a http://localhost:3000/api-docs para documentación swagger en línea.
-**Atención**
-En swagger no se genera adecuadamente el array de tags para subir anuncios. Para realizar la prueba, utilizar sólo un término.
-Para probar adecuadamente la subida de varias etiquetas, se recomienda el uso de ** _postman_ **
 
 ## Propósito
 
@@ -99,9 +99,28 @@ Los campos a devolver se pueden seleccionar (ver la sección _peticiones al api_
 
 ---
 
+### Autenticado
+
+Antes de hacer cualquier petición al API, es necesario obtener el token de autenticación.  
+Es necesario realizar una petición tipo POST a http://localhost:3000/api/login, enviando los datos email: _email_usuario_ y password: _password_usuario_, en el body de la petición.  
+Si el usuario está registrado, el API responderá con un objeto JSON que contendrá el token del usuario, válido para dos días.
+
+```JSON
+  {
+    "token": "string"
+  }
+```
+
+Este token será necesario para realizar todas las operaciones de obtención y creación de anuncios que se envíen al API.  
+El token será proporcionado en query string:  
+`?token=TOKEN`  
+o bien en la cabecera de la petición con la clave _Authorization_:  
+`Authorization: TOKEN`  
+**Ojo** ... no es un _bearer token_. Enviarlo como tal no permite las operaciones.
+
 ### Listado completo de anuncios
 
-`http://localhost:3000/api`
+`http://localhost:3000/api/anuncios`
 
 ### Filtros permitidos
 
@@ -156,6 +175,7 @@ Sobre la dirección principal, y de la misma forma que se indican los filtros, s
     Ejemplo:  
     `http://localhost:3000/api/?fields=nombre+precio%20-_id`  
     Esto devolverá el listado de artículos sólo con los campos nombre y precio.
+    _No olvides incluir el token_
 
 ---
 
@@ -213,7 +233,9 @@ Cualquier fallo no detectado, rogamos se pongan en contacto para su descripción
 
 Bajo la dirección `http://localhost:3000` el servidor mostrará una página web de testeo, dónde se mostraran los
 anuncios contenidos en la base de datos.
+Para acceder a dicha página, debe realizarse un **inicio de sesión** con el mismo email y contraseña que se utiliza para el API.  
+En este caso utilizamos una sesión con cookie, por lo que las peticiones de filtrado y paginación realizadas en la URL, no es necesario pasarles token.
 
-Se pueden aplicar los mismos filtros que en la API, sin poner `/api` en la URL, para probar el funcionamiento de la misma, y filtrar
+Se pueden aplicar los mismos filtros que en la API, sin poner `/api` en la URL, para probar el funcionamiento de la misma, y filtrar.
 los anuncios. Por ejemplo:  
 `http://localhost:3000/?precio=50-&sort=precio` --> Muestra los artículos mayores e iguales de 50 de precio, ordenados por precio.

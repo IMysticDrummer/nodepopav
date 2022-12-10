@@ -66,7 +66,7 @@ paths:
       parameters:
         - name: token
           in: query
-          description: authorization token can be provided in query under this parameter or en header, under Authorization key
+          description: authorization token can be provided in query under this parameter or in header, under Authorization key
           schema:
             type: string
         - name: nombre
@@ -95,10 +95,11 @@ paths:
             example: lifestyle
         - name: fields
           in: query
-          description: returns only the indicated fields. Several fields can be selected, joining by "+". If DB _id is not desired, this can be retired adding "%20-_id"
+          description: returns only the indicated fields. Several fields can be selected, joining by "+".  If DB _id is not desired, this can be retired adding " -_id". Be careful with the *space* before -id.  If you are going to **use directly the query in the API by GET method**, you must be sure to **use "%20-id"**, to maintain the correct RFC 3986 codification.
           schema:
             type: string
-            example: nombre+precio%20-_id
+            example: nombre+precio -_id
+          allowReserved: true
         - name: skip
           in: query
           description: skips the indicated advertisements from the DB results. This is usefull to manager the pagination
@@ -159,6 +160,8 @@ paths:
             schema:
               $ref: '#/components/schemas/NewAd'
             encoding:
+              tags:
+                explode: true
               foto:
                 contentType: image/png, image/jpeg, image/bmp, image/gif, image/tiff
       responses:
@@ -297,8 +300,8 @@ components:
           description: price of the an article to sell or budget for an article to buy
           example: 50
         tags:
-          type: array
           description: array with the tags relationed with the advertisement.
+          type: array
           items:
             type: string
         foto:

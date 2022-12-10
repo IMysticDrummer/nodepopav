@@ -31,7 +31,7 @@ const path = require('path');
 // };
 
 let tokenAdquired;
-describe.only('/api/anuncios method POST', () => {
+describe.skip('/api/anuncios method POST', () => {
   describe('Testing ad well created', () => {
     it('should return a token object and status 200 when good credetials are provided', (done) => {
       request(app)

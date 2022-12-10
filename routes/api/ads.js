@@ -140,7 +140,10 @@ router.post(
       destination: '/images/thumbnails',
     };
 
-    requester.send(request, async (result) => {});
+    requester.send(request, async (result) => {
+      const respuesta = await result;
+      console.log(respuesta);
+    });
   }
 );
 

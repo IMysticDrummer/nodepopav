@@ -23,11 +23,11 @@ const thumbnailCreator = async (fileName, destination) => {
 
 const responser = new Responder({ name: 'thumbnail creator responder' });
 
-responser.on('thumbnailer', (req, done) => {
+responser.on('thumbnailer', async (req, done) => {
   const { fileName, destination } = req;
   console.log('Doing thumbnail from ', fileName);
   try {
-    const result = thumbnailCreator(fileName, destination);
+    const result = await thumbnailCreator(fileName, destination);
     done(`Thumbnail done and saved in ${result}`);
   } catch {
     done(`An error has happend: ${result})`);

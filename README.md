@@ -18,8 +18,8 @@ Web básica mostrando los anuncios.
 El API sube archivos de fotos para los anuncios cuando se crean.  
 El campo **foto** es **obligatorio** para crear un anuncio.
 
-El API de Nodepop proporciona un microservicio que crea thumbnails de las fotos subidas. Dichas fotos son guardadas en el directorio `/public/images/thumbnails`.  
-Dicho directorio de estar creado. Asegurar cuando se clone el repositorio que dicho directorio existe.
+El API de Nodepop proporciona un microservicio que crea thumbnails de las fotos subidas (_Thumbnailer_). Dichas fotos son guardadas en el directorio `/public/images/thumbnails`.  
+Thumbnailer creará el directorio cuando haga la primera conversión.
 
 # PRERREQUISITOS PARA USAR LA APLICACIÓN
 

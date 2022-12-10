@@ -7,7 +7,7 @@
     "startNodepop": "node ./bin/www",
     "startThumbnailer": "node ./microservice/thumbnailCreator.js",
     "dev": "DEBUG=nodepop:* npx nodemon ./bin/www",
-    "devWin": "set DEBUG=nodepop:* & npx nodemon",
+    "devWin": "set DEBUG=nodepop:* & npx nodemon ./bin/allService",
     "initdb": "node initDB.js",
     "sintax": "npx eslint  . --ext .js",
     "test": "jest --coverage --verbose --forceExit",

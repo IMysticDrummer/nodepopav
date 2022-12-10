@@ -1,11 +1,11 @@
 <%- include('./header.html') %>
 
 <form class="form-control" method="post">
-
+  <div><%= error %></div>
+  
   <input class="form-control" type="email" name="email" id="email" required value="<%= email %>" placeholder='<%= __("We'll never give your email to anyone else") %> '  />
   <input class="form-control" type="password" name="password" id="password" required />
   <button class="form-control btn btn-primary btn-xl rounded-pill mt-5" type="submit"> <%= __('Submit') %> </button>
-  <div><%= error %></div>
 </form>
 
 </body>

@@ -9,7 +9,11 @@ router.get('/:locale', (req, res, next) => {
     maxAge: 1000 * 60 * 60 * 24 * 30,
   });
 
-  res.redirect(req.get('Referrer'));
+  if (req.get('Referrer')) {
+    res.redirect(req.get('Referrer'));
+  } else {
+    res.redirect('/');
+  }
 });
 
 module.exports = router;

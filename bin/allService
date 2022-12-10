@@ -4,6 +4,10 @@
  * Module dependencies.
  */
 require('dotenv').config();
+
+/**
+ * Starting associated microservice
+ */
 require('../microservice/thumbnailCreator.js');
 
 var app = require('../app');

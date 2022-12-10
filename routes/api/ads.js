@@ -111,7 +111,7 @@ router.post(
       const adCreated = await ad.save();
       res.status(201).json({
         result: {
-          id: adCreated.__id,
+          id: adCreated._id,
           msg: `Advertisement ${adCreated.nombre} succesfully created`,
         },
       });
@@ -140,9 +140,7 @@ router.post(
       destination: '/images/thumbnails',
     };
 
-    requester.send(request, (result) => {
-      console.log(result);
-    });
+    requester.send(request, async (result) => {});
   }
 );
 

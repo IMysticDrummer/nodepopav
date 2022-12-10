@@ -1,7 +1,6 @@
 'use strict';
 
 const request = require('supertest');
-require('../bin/allService');
 const app = require('../app');
 
 let tokenAdquired;
@@ -314,13 +313,14 @@ describe('Testing API endpoints', () => {
     });
 
     describe('POST Method', () => {
-      const objectData = {
-        nombre: 'prueba',
-        venta: false,
-        precio: 50,
-        tags: ['lifestyle', 'work'],
-      };
-      it('should return 400 status and error object if image has not been set', (done) => {
+      it('should return 400 status and error object if not multipart/form-data has been set', (done) => {
+        const objectData = {
+          nombre: 'prueba',
+          venta: false,
+          precio: 50,
+          foto: null,
+          tags: ['lifestyle', 'work'],
+        };
         request(app)
           .post('/api/anuncios')
           .set('Authorization', tokenAdquired)
@@ -342,8 +342,33 @@ describe('Testing API endpoints', () => {
             return done();
           });
       });
+      it('should return 400 status and error object if "foto" has not been set', (done) => {
+        request(app)
+          .post('/api/anuncios')
+          .set('Authorization', tokenAdquired)
+          .field('nombre', 'prueba')
+          .field('venta', false)
+          .field('precio', 50)
+          .field('tags', ['lifestyle', 'work'])
+          .expect('Content-Type', /json/)
+          .expect(400)
+          .expect((res) => {
+            expect(res.body).toEqual(
+              expect.objectContaining({
+                status: 400,
+                error: expect.any(String),
+              })
+            );
+            expect(res.body.error).toMatch(/Image/);
+          })
+          .end((err, res) => {
+            if (err) {
+              return done(err);
+            }
+            return done();
+          });
+      });
       it('should return 422 status and error object if "nombre" has not been set', (done) => {
-        const objectData2 = { ...objectData, nombre: null };
         request(app)
           .post('/api/anuncios')
           .set('Authorization', tokenAdquired)
@@ -369,7 +394,6 @@ describe('Testing API endpoints', () => {
           });
       });
       it('should return 422 status and error object if "venta" has not been set', (done) => {
-        const objectData2 = { ...objectData, nombre: null };
         request(app)
           .post('/api/anuncios')
           .set('Authorization', tokenAdquired)
@@ -395,7 +419,6 @@ describe('Testing API endpoints', () => {
           });
       });
       it('should return 422 status and error object if "precio" has not been set', (done) => {
-        const objectData2 = { ...objectData, nombre: null };
         request(app)
           .post('/api/anuncios')
           .set('Authorization', tokenAdquired)
@@ -421,7 +444,6 @@ describe('Testing API endpoints', () => {
           });
       });
       it('should return 422 status and error object if "precio" is not a number', (done) => {
-        const objectData2 = { ...objectData, nombre: null };
         request(app)
           .post('/api/anuncios')
           .set('Authorization', tokenAdquired)
@@ -448,7 +470,6 @@ describe('Testing API endpoints', () => {
           });
       });
       it('should return 422 status and error object if "tags" is not been set', (done) => {
-        const objectData2 = { ...objectData, nombre: null };
         request(app)
           .post('/api/anuncios')
           .set('Authorization', tokenAdquired)
@@ -474,7 +495,6 @@ describe('Testing API endpoints', () => {
           });
       });
       it('should return 422 status and error object if "tags" has a non permitted word', (done) => {
-        const objectData2 = { ...objectData, nombre: null };
         request(app)
           .post('/api/anuncios')
           .set('Authorization', tokenAdquired)

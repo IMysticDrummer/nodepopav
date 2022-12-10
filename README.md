@@ -21,6 +21,8 @@ Dicho directorio de estar creado. Asegurar cuando se clone el repositorio que di
 
 # PRERREQUISITOS PARA USAR LA APLICACIÓN
 
+Es necesario tener instalado mongodb o bien un docker corriendo en el puerto por defecto de mongodb.
+
 ## Clonar el repositorio en local
 
 Repositorio:  
@@ -30,12 +32,24 @@ Repositorio:
 
 No olvidar instalar las dependencias con el comando `npm install`.
 
+## Crear un archivo de entorno
+
+Seguir lo siguientes pasos:
+
+1. Copiar el archivo .env.example como .env
+2. Editar el archivo .env
+3. Rellenar los campos **obligatorios** :
+
+   - **DB_URL**: Es la cadena de conexión con la base de datos mongodb
+   - **JWT_SECRET**: Es la cadena de firma privada que utilizará el servidor para generar las claves y tokens
+   - _PORT_: Esta clave es opcional, en caso de querer que la aplicación corra por otro puerto diferente al 3000
+
 ## Base de datos
 
 La base de datos se llamará `nodepop`.  
 La colección se llamará `advertisements`.  
 Asegurar que el archivo `anunciosBase.json` está disponible cuando se ha clonado el repositorio.  
-Correr el comando `npm run initdb`  
+**Correr el comando `npm run initdb`**  
 El script se encargará de crear los índices necesarios, y subir los anuncios.
 También creará un **primer usuario**: user@example.com, con _password_ 1234.
 
@@ -50,11 +64,20 @@ _Arranque de los servicios por separado_:
 Modo desarrollo en windows: `npm run devWin`  
 Modo desarrollo en plataformas linux: `npm run dev`
 
+**Modos de test**
+
+- `npm run test`: ejecuta el "supertest" general. La prueba de generación de anuncios está deshabilitada, para no subir anuncios de prueba.
+- `npm run test:watch`: inicia el modo de vigilancia de supertest
+  Para comprobar el resultado del test completo sobre la aplicación, incluyendo el test de creación de anuncios, se incluye con este paquete el fichero `output-test-file` en el directorio raíz. Este fichero cotiene el coverage de la prueba completa.
+
 # USO DEL API
 
 ## Documentación en línea
 
 Una vez arrancada la aplicación, se puede acceder a http://localhost:3000/api-docs para documentación swagger en línea.
+**Atención**
+En swagger no se genera adecuadamente el array de tags para subir anuncios. Para realizar la prueba, utilizar sólo un término.
+Para probar adecuadamente la subida de varias etiquetas, se recomienda el uso de ** _postman_ **
 
 ## Propósito
 

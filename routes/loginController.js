@@ -25,6 +25,7 @@ class LoginController {
         res.locals.error = res.__('Invalid credentials');
         res.locals.email = email;
         res.locals.page = 'login';
+        res.status(401);
         res.render('login');
         return;
       }

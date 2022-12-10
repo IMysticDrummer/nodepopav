@@ -20,7 +20,7 @@ router.get('/', Advertisement.dataValidator('get'), async (req, res, next) => {
   data.page = 'index';
 
   //User
-  data.email=req.userEmail;
+  data.email = req.userEmail;
 
   //Search and render
   try {

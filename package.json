@@ -10,8 +10,7 @@
     "devWin": "set DEBUG=nodepop:* & npx nodemon",
     "initdb": "node initDB.js",
     "sintax": "npx eslint  . --ext .js",
-    "test:int": "jest ./__test__/api.test.js",
-    "test": "jest --coverage --forceExit",
+    "test": "jest --coverage --verbose --forceExit",
     "test:watch": "jest --coverage --watchAll"
   },
   "dependencies": {

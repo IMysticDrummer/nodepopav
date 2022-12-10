@@ -21,7 +21,7 @@ Dicho directorio de estar creado. Asegurar cuando se clone el repositorio que di
 
 # PRERREQUISITOS PARA USAR LA APLICACIÓN
 
-Es necesario tener instalado mongodb o bien un docker corriendo en el puerto por defecto de mongodb.
+Es necesario tener instalado mongodb.
 
 ## Clonar el repositorio en local
 
@@ -63,6 +63,9 @@ _Arranque de los servicios por separado_:
 
 Modo desarrollo en windows: `npm run devWin`  
 Modo desarrollo en plataformas linux: `npm run dev`
+
+**Problemas en el arranque**
+Si después de arrancar todos los servicios, al intentar entrar en la dirección base de la página web (http://localhost:3000), aparece algún error de usuario no encontrado, **borrar las cookies del navegador**, y volver a intentarlo.
 
 **Modos de test**
 

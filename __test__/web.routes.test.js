@@ -47,18 +47,20 @@ describe('Testing Web Routes', () => {
       expect(login.status).toBe(200);
     });
     it('should returns 401 when somene is loggining with bad credentials', async () => {
+      expect.assertions(1);
       const login = await request(app)
         .post('/login')
         .send({ email: 'user1@example.com', password: '1234' })
-        .set('Accept', 'application/json')
-        .expect(401);
+        .set('Accept', 'application/json');
+      expect(login.status).toBe(401);
     });
     it('should returns 302 and redirect "/" when somene is loggining', async () => {
+      expect.assertions(2);
       const login = await request(app)
         .post('/login')
         .send({ email: 'user@example.com', password: '1234' })
-        .set('Accept', 'application/json')
-        .expect(302);
+        .set('Accept', 'application/json');
+      expect(login.status).toBe(302);
       expect(login.headers.location).toBe('/');
     });
   });

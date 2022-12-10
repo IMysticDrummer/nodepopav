@@ -3,33 +3,35 @@
 const request = require('supertest');
 const { Advertisement } = require('../models');
 const app = require('../app');
+const path = require('path');
 
-jest.mock('../models', () => {
-  const originalModule = jest.requireActual('../models');
+// jest.mock('../models', () => {
+//   const originalModule = jest.requireActual('../models');
+//   //console.log(originalModule.Advertisement.prototype.save);
+//   originalModule.Advertisement.prototype.save = jest.fn((data) => {
+//     return {
+//       id: 'algun_id',
+//       nombre: data.nombre,
+//     };
+//   });
 
-  return {
-    __esModule: true,
-    ...originalModule,
-    save: jest.fn((data) => {
-      return {
-        id: 'algun_id',
-        nombre: data.nombre,
-      };
-    }),
-  };
-});
+//   return {
+//     __esModule: true,
+//     ...originalModule,
+//   };
+// });
 
-const responseSaveAd = (name) => {
-  return {
-    result: {
-      id: 'stringid',
-      msg: `Advertisement ${name} succesfully created`,
-    },
-  };
-};
+// const responseSaveAd = (name) => {
+//   return {
+//     result: {
+//       id: 'stringid',
+//       msg: `Advertisement ${name} succesfully created`,
+//     },
+//   };
+// };
 
 let tokenAdquired;
-describe.skip('/api/anuncios method POST', () => {
+describe.only('/api/anuncios method POST', () => {
   describe('Testing ad well created', () => {
     it('should return a token object and status 200 when good credetials are provided', (done) => {
       request(app)
@@ -58,7 +60,7 @@ describe.skip('/api/anuncios method POST', () => {
         .field('venta', false)
         .field('precio', 50)
         .field('tags', ['lifestyle', 'work'])
-        .attach('foto', './__test__/bici.jpeg')
+        .attach('foto', `${path.join(__dirname)}/bici.jpeg`)
         .expect('Content-Type', /json/)
         .expect(201)
         .expect((res) => {
@@ -72,6 +74,7 @@ describe.skip('/api/anuncios method POST', () => {
         })
         .end((err, res) => {
           if (err) {
+            console.log(res.body.error);
             return done(err);
           }
           return done();
